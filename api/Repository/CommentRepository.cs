@@ -23,14 +23,14 @@ namespace api.Repository
             return await _context.Comments.Include(c => c.Stock).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Comment?> CreateAsync(Comment commentModel)
+        public async Task<Comment> CreateAsync(Comment commentModel)
         {
             await _context.Comments.AddAsync(commentModel);
             await _context.SaveChangesAsync();
             return commentModel;
         }
 
-        public async Task<Comment?> UpdateAsync(int id, UpdateCommentRequestDto commentDto)
+        public async Task<Comment?> UpdateAsync(int id, Comment commentDto)
         {
             var commentModel = await GetByIdAsync(id);
             if (commentModel == null) return null;
@@ -38,7 +38,6 @@ namespace api.Repository
             commentModel.Content = commentDto.Content;
             await _context.SaveChangesAsync();
             return commentModel;
-
         }
 
         public async Task<Comment?> DeleteAsync(int id)

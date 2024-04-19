@@ -32,15 +32,12 @@ namespace api.Controllers
 
         [HttpPost]
         [Route("{stockId}")]
-        public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto comment, [FromRoute] int stockId)
+        public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentDto, [FromRoute] int stockId)
         {
-            var stock = await _stockRepository.GetByIdAsync(stockId);
-            if (stock == null) return BadRequest();
+            if (!await _stockRepository.StockExists(stockId)) return BadRequest("Stock does not exist!");
 
-            var commentModel = comment.toCommentFromCreate();
-            commentModel.StockId = stockId;
-            commentModel.Stock = stock;
-            var commentResponse = await _commentRepository.CreateAsync(commentModel);
+            var commentModel = commentDto.toCommentFromCreate(stockId);
+            await _commentRepository.CreateAsync(commentModel);
 
             return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.toCommentDto());
         }
@@ -49,20 +46,21 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromBody] UpdateCommentRequestDto commentModel, [FromRoute] int id)
         {
-            var commentResponse = await _commentRepository.UpdateAsync(id, commentModel);
+            var commentResponse = await _commentRepository.UpdateAsync(id, commentModel.toCommentFromUpdate());
+            if (commentResponse == null) return NotFound("Comment not found!");
 
-            if (commentResponse == null) return NotFound();
-
-            return Ok(commentResponse);
+            return Ok(commentResponse.toCommentDto());
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await _commentRepository.DeleteAsync(id);
+            var commentModel = await _commentRepository.DeleteAsync(id);
 
-            return NoContent();
+            if (commentModel == null) return NotFound("Comment not found!");
+
+            return Ok(commentModel.toCommentDto());
         }
     }
 }
