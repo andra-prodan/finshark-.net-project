@@ -1,10 +1,8 @@
-using api.Data;
 using api.Dtos.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
-using api.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -15,11 +13,11 @@ namespace api.Controllers
         private readonly IStockRepository _stockRepository = stockRepository;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var stocks = await _stockRepository.GetAllAsync();
+            var stocks = await _stockRepository.GetAllAsync(query);
             var stockDto = stocks.Select(s => s.ToStockDto());
 
             return Ok(stockDto);
