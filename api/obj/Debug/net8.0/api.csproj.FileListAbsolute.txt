@@ -147,3 +147,7 @@ D:\FinShark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCo
 D:\FinShark\api\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
 D:\FinShark\api\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
 D:\FinShark\api\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\FinShark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Authorization.dll
+D:\FinShark\api\bin\Debug\net8.0\Microsoft.AspNetCore.Metadata.dll
+D:\FinShark\api\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\FinShark\api\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll

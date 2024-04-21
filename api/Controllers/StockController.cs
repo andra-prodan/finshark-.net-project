@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using api.Dtos.Stock;
 using api.Helpers;
 using api.Interfaces;
@@ -8,6 +9,7 @@ namespace api.Controllers
 {
     [Route("api/stock")]
     [ApiController]
+    [Authorize]
     public class StockController(IStockRepository stockRepository) : ControllerBase
     {
         private readonly IStockRepository _stockRepository = stockRepository;

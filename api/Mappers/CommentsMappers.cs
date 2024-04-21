@@ -17,16 +17,18 @@ namespace api.Mappers
                 Title = commentModel.Title,
                 Content = commentModel.Content,
                 CreatedOn = commentModel.CreatedOn,
-                StockId = commentModel.StockId
+                CreatedBy = commentModel.AppUser.UserName,
+                StockId = commentModel.StockId,
             };
         }
-        public static Comment toCommentFromCreate(this CreateCommentRequestDto commentDto, int stockId)
+        public static Comment toCommentFromCreate(this CreateCommentRequestDto commentDto, int stockId, string appUserId)
         {
             return new Comment
             {
                 Title = commentDto.Title,
                 Content = commentDto.Content,
-                StockId = stockId
+                StockId = stockId,
+                AppUserId = appUserId
             };
         }
 
@@ -47,6 +49,7 @@ namespace api.Mappers
                 Title = commentDto.Title,
                 Content = commentDto.Content,
                 CreatedOn = commentDto.CreatedOn,
+                CreatedBy = commentDto.AppUser.UserName
             };
         }
     }

@@ -1,17 +1,27 @@
+using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using api.Dtos.Comment;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using api.Extensions;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace api.Controllers
 {
     [Route("api/comment")]
     [ApiController]
-    public class CommentController(ICommentRepository commentRepository, IStockRepository stockRepository) : ControllerBase
+    [Authorize]
+    public class CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager) : ControllerBase
     {
         private readonly ICommentRepository _commentRepository = commentRepository;
         private readonly IStockRepository _stockRepository = stockRepository;
+        private readonly UserManager<AppUser> _userManager = userManager;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -42,7 +52,10 @@ namespace api.Controllers
 
             if (!await _stockRepository.StockExists(stockId)) return BadRequest("Stock does not exist!");
 
-            var commentModel = commentDto.toCommentFromCreate(stockId);
+            var userName = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(userName);
+
+            var commentModel = commentDto.toCommentFromCreate(stockId, appUser.Id);
             await _commentRepository.CreateAsync(commentModel);
 
             return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.toCommentDto());
